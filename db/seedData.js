@@ -8,7 +8,32 @@ async function dropTables() {
 }
 
 async function createTables() {
-  console.log("Starting to build tables...");
+  try {
+    console.log("Starting to build tables...");
+    await client.query(`
+    CREATE TABLE users (
+      id SERIAL PRIMARY KEY,
+      username varchar(255) UNIQUE NOT NULL,
+      password varchar(255) NOT NULL,
+    );
+    CREATE TABLE activities (
+      id SERIAL PRIMARY KEY,
+      name varchar (255) UNIQUE NOT NULL,
+      description text NOT NULL, 
+    );
+    CREATE TABLE routines (
+      id SERIAL PRIMARY KEY,
+      "creatorId" integer foreign key
+      "isPublic" boolean default false
+      name varchar (255) UNIQUE NOT NULL,
+      goal text NOT NULL,
+    );
+    CREATE TABLE routine_activities (
+
+    );
+`);
+  } catch (error) {}
+
   // create all tables, in the correct order
 }
 
