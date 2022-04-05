@@ -1,7 +1,7 @@
 // require in the database adapter functions as you write them (createUser, createActivity...)
 // const { } = require('./');
 const client = require("./client");
-const {createUser} = require('./index')
+const { createUser, createActivity } = require("./index");
 async function dropTables() {
   try {
     console.log("Dropping All Tables...");
@@ -13,9 +13,8 @@ async function dropTables() {
     `);
     console.log("Dropped all tables!");
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
-  
 }
 
 async function createTables() {
@@ -28,7 +27,7 @@ async function createTables() {
       password varchar(255) NOT NULL
     )
   `);
-    
+
     await client.query(`
     CREATE TABLE activities (
       id SERIAL PRIMARY KEY,
@@ -53,8 +52,8 @@ async function createTables() {
       duration INTEGER,
       count INTEGER
     );
-    `)
-console.log("Finished building tables!");
+    `);
+    console.log("Finished building tables!");
   } catch (error) {
     console.error(error);
     throw error;
@@ -244,7 +243,7 @@ async function rebuildDB() {
     await dropTables();
     await createTables();
     await createInitialUsers();
-    // await createInitialActivities();
+    await createInitialActivities();
     // await createInitialRoutines();
     // await createInitialRoutineActivities();
   } catch (error) {
