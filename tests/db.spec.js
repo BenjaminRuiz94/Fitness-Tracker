@@ -126,7 +126,7 @@ describe("Database", () => {
       });
     });
   });
-  xdescribe("Routines", () => {
+  describe("Routines", () => {
     let routineToCreateAndUpdate;
     xdescribe("getActivityById", () => {
       it("gets activities by their id", async () => {
@@ -134,7 +134,7 @@ describe("Database", () => {
         expect(activity).toBeTruthy();
       });
     });
-    xdescribe("getAllRoutines", () => {
+    describe("getAllRoutines", () => {
       let routine;
       beforeAll(async () => {
         [routine] = await getAllRoutines();
