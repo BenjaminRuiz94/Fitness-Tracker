@@ -15,19 +15,21 @@ async function createRoutine({ creatorId, isPublic, name, goal }) {
     throw error;
   }
 }
-
+/*
 async function getAllRoutines() {
   try {
     const { rows } = await client.query(`
     SELECT * FROM routines
-    JOIN users ON routines."creatorId" = creator.id
+    JOIN routine_activities ON routine_activities."routineId" = routine.id
+    JOIN activities ON routine_activities."activityId" = activities.id
     `);
+    console.log(rows, "Here are the rows");
     return rows;
   } catch (error) {
     throw error;
   }
 }
-
+*/
 async function getRoutinesWithoutActivities() {
   try {
     const { rows } = await client.query(`
