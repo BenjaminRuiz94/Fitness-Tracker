@@ -119,6 +119,7 @@ describe("Database", () => {
     describe("updateActivity", () => {
       it("Updates name and description of an activity without affecting the ID. Returns the updated Activity.", async () => {
         const [activityToUpdate] = await getAllActivities();
+        console.log(activityToUpdate, "activityToUpdate");
         activityToUpdate.name = "standing barbell curl";
         const activity = await updateActivity(activityToUpdate);
         expect(activity).toEqual(activityToUpdate);

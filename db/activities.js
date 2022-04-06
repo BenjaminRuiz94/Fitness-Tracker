@@ -48,12 +48,10 @@ async function getActivityById(id) {
     throw error;
   }
 }
-/* work starts here
-async function updateActivity(id, name, description) {
-  const fields = {
-    name: name,
-    description: description,
-  };
+
+async function updateActivity(fields = {}) {
+  const { id } = fields;
+  delete fields.id;
   const setString = Object.keys(fields)
     .map((key, index) => `"${key}"=$${index + 1}`)
     .join(", ");
@@ -61,26 +59,28 @@ async function updateActivity(id, name, description) {
   if (setString.length === 0) {
     return;
   }
-  console.log(setString);
+
   try {
-    const {
-      rows: [activity],
-    } = await client.query(
-      `
+    if (setString.length > 0) {
+      const {
+        rows: [activity],
+      } = await client.query(
+        `
       UPDATE activities
-      SET ${setString},
+      SET ${setString}
       WHERE id=${id}
       RETURNING *;
     `,
-      Object.values(fields)
-    );
-    console.log(activity, "Here is the activity!");
-    return activity;
+        Object.values(fields)
+      );
+      delete activity.id;
+      return activity;
+    }
   } catch (error) {
     throw error;
   }
 }
-*/
+
 module.exports = {
   createActivity,
   getAllActivities,
