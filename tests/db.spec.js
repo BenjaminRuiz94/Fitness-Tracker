@@ -119,7 +119,7 @@ describe("Database", () => {
     describe("updateActivity", () => {
       it("Updates name and description of an activity without affecting the ID. Returns the updated Activity.", async () => {
         const [activityToUpdate] = await getAllActivities();
-        console.log(activityToUpdate, "activityToUpdate");
+
         activityToUpdate.name = "standing barbell curl";
         const activity = await updateActivity(activityToUpdate);
         expect(activity).toEqual(activityToUpdate);
@@ -330,9 +330,6 @@ describe("Database", () => {
           name: "BodyWeight Day",
           goal: "Do workouts that can be done from home, no gym or weights required.",
         });
-        console.log(await getRoutineById(5), "ROUTINE TO CREATE/UPDATE");
-        console.log(routineToCreateAndUpdate, "CREATED ROUTINE!!!!");
-        console.log(routineToCreateAndUpdate.id, "ROUTINE ID!!!!!");
         const queriedRoutine = await getRoutineById(
           routineToCreateAndUpdate.id
         );
@@ -409,7 +406,6 @@ describe("Database", () => {
         routineActivityToCreateAndUpdate = await addActivityToRoutine(
           routineActivityData
         );
-        console.log(routineActivityToCreateAndUpdate, "LOOK HERE!!");
         expect(routineActivityToCreateAndUpdate.routineId).toBe(
           routineActivityData.routineId
         );
@@ -424,7 +420,7 @@ describe("Database", () => {
         );
       });
     });
-    xdescribe("updateRoutineActivity({ id, count, duration })", () => {
+    describe("updateRoutineActivity({ id, count, duration })", () => {
       it("Finds the routine with id equal to the passed in id. Updates the count or duration as necessary.", async () => {
         const newRoutineActivityData = {
           id: routineActivityToCreateAndUpdate.id,
@@ -445,11 +441,12 @@ describe("Database", () => {
         );
       });
     });
-    xdescribe("destroyRoutineActivity(id)", () => {
+    describe("destroyRoutineActivity(id)", () => {
       it("remove routine_activity from database", async () => {
         const deletedRoutine = await destroyRoutineActivity(
           routineActivityToCreateAndUpdate.id
         );
+        console.log(routineActivityToCreateAndUpdate.id, "IN DELETED ROUTINE");
         expect(deletedRoutine.id).toBe(routineActivityToCreateAndUpdate.id);
         const { rows } = await client.query(`
           SELECT * FROM routine_activities
