@@ -10,18 +10,18 @@ const client = require("./db/client");
 server.use(morgan("dev"));
 server.use(cors());
 
-// server.use((req, res, next) => {
-//   console.log("<____Body Logger START____>");
-//   console.log(req.body);
-//   console.log("<_____Body Logger END_____>");
+server.use((req, res, next) => {
+  console.log("<____Body Logger START____>");
+  console.log(req.body);
+  console.log("<_____Body Logger END_____>");
 
-//   next();
-// });
+  next();
+});
 
 server.use("/api", apiRouter);
-// server.get("/products/:id", function (req, res, next) {
-//   res.json({ msg: "This is CORS-enabled for all origins!" });
-// });
+server.get("/api", function (req, res, next) {
+  res.json({ msg: "This is CORS-enabled for all origins!" });
+});
 
 client.connect();
 
