@@ -47,6 +47,7 @@ describe("API", () => {
   describe("Users", () => {
     let newUser = { username: "robert", password: "bobbylong321" };
     let newUserShortPassword = { username: "robertShort", password: "bobby21" };
+    console.log(API_URL, "LOOK HERE FOR API URL!!!");
     describe("POST /users/register", () => {
       let tooShortSuccess, tooShortResponse;
       beforeAll(async () => {
@@ -54,6 +55,7 @@ describe("API", () => {
           `${API_URL}/api/users/register`,
           newUser
         );
+        console.log(successResponse, "LOOK HERE FOR SUCCESSRESPONSE !!!");
         registeredUser = successResponse.data.user;
         try {
           tooShortSuccess = await axios.post(
