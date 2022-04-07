@@ -28,7 +28,6 @@ async function getAllRoutines() {
     JOIN users ON routines."creatorId" = users.id
     
     `);
-    console.log(rows, "Here are the rows");
     return attachActivitiesToRoutines(rows);
   } catch (error) {
     throw error;
@@ -108,26 +107,11 @@ async function getPublicRoutinesByActivity({ id }) {
     `,
       [id]
     );
-    console.log(rows, "rows");
     return attachActivitiesToRoutines(rows);
   } catch (error) {
     throw error;
   }
 }
-
-// async function getRoutineById(id) {
-//   try {
-//     const { rows } = await client.query(`
-//         SELECT * FROM routines
-//         WHERE id = ${id};
-//         `);
-//     console.log(rows, "ROWS!!!!!!!");
-
-//     return rows;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
 
 async function getRoutineById(id) {
   try {
