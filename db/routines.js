@@ -3,7 +3,9 @@ const client = require("./client");
 
 async function createRoutine({ creatorId, isPublic, name, goal }) {
   try {
-    const { rows } = await client.query(
+    const {
+      rows: [routine],
+    } = await client.query(
       `
         INSERT INTO routines("creatorId", "isPublic", name, goal)
         VALUES ($1, $2, $3, $4)
@@ -11,7 +13,8 @@ async function createRoutine({ creatorId, isPublic, name, goal }) {
     `,
       [creatorId, isPublic, name, goal]
     );
-    return rows;
+
+    return routine;
   } catch (error) {
     throw error;
   }
@@ -111,7 +114,21 @@ async function getPublicRoutinesByActivity({ id }) {
     throw error;
   }
 }
-/* We stopped here
+
+// async function getRoutineById(id) {
+//   try {
+//     const { rows } = await client.query(`
+//         SELECT * FROM routines
+//         WHERE id = ${id};
+//         `);
+//     console.log(rows, "ROWS!!!!!!!");
+
+//     return rows;
+//   } catch (error) {
+//     throw error;
+//   }
+// }
+
 async function getRoutineById(id) {
   try {
     const {
@@ -124,12 +141,64 @@ async function getRoutineById(id) {
     `,
       [id]
     );
+
+    if (!routine) {
+      return null;
+    }
+
     return routine;
   } catch (error) {
     throw error;
   }
 }
-*/
+
+async function updateRoutine(fields = {}) {
+  const { id } = fields;
+  // const currentRoutine = await getRoutineById(id)
+  const setString = Object.keys(fields)
+    .map((key, index) => `"${key}"=$${index + 1}`)
+    .join(", ");
+
+  if (setString.length === 0) {
+    return;
+  }
+
+  try {
+    if (setString.length > 0) {
+      const {
+        rows: [routines],
+      } = await client.query(
+        `
+      UPDATE routines
+      SET ${setString}
+      WHERE id=${id}
+      RETURNING *;
+    `,
+        Object.values(fields)
+      );
+
+      return routines;
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function destroyRoutine(id) {
+  try {
+    await client.query(`
+    DELETE FROM routines
+    WHERE id = ${id} 
+    `);
+    await client.query(`
+    DELETE FROM routine_activities
+    WHERE "routineId" = ${id}
+    `);
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   createRoutine,
   getAllRoutines,
@@ -139,4 +208,6 @@ module.exports = {
   getPublicRoutinesByUser,
   getPublicRoutinesByActivity,
   getRoutineById,
+  updateRoutine,
+  destroyRoutine,
 };

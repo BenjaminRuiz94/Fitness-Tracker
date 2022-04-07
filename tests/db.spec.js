@@ -330,13 +330,16 @@ describe("Database", () => {
           name: "BodyWeight Day",
           goal: "Do workouts that can be done from home, no gym or weights required.",
         });
+        console.log(await getRoutineById(5), "ROUTINE TO CREATE/UPDATE");
+        console.log(routineToCreateAndUpdate, "CREATED ROUTINE!!!!");
+        console.log(routineToCreateAndUpdate.id, "ROUTINE ID!!!!!");
         const queriedRoutine = await getRoutineById(
           routineToCreateAndUpdate.id
         );
         expect(routineToCreateAndUpdate).toEqual(queriedRoutine);
       });
     });
-    xdescribe("updateRoutine", () => {
+    describe("updateRoutine", () => {
       let queriedRoutine;
       beforeAll(async () => {
         routineToCreateAndUpdate = await updateRoutine({
@@ -370,7 +373,7 @@ describe("Database", () => {
         expect(routineToCreateAndUpdate.goal).toBe(queriedRoutine.goal);
       });
     });
-    xdescribe("destroyRoutine", () => {
+    describe("destroyRoutine", () => {
       it("removes routine from database", async () => {
         await destroyRoutine(routineToCreateAndUpdate.id);
         const {
@@ -393,7 +396,7 @@ describe("Database", () => {
       });
     });
   });
-  xdescribe("Routine Activities", () => {
+  describe("Routine Activities", () => {
     const routineActivityData = {
       routineId: 4,
       activityId: 8,
@@ -401,12 +404,12 @@ describe("Database", () => {
       duration: 10000,
     };
     let routineActivityToCreateAndUpdate;
-    xdescribe("addActivityToRoutine({ routineId, activityId, count, duration })", () => {
+    describe("addActivityToRoutine({ routineId, activityId, count, duration })", () => {
       it("creates a new routine_activity, and return it", async () => {
         routineActivityToCreateAndUpdate = await addActivityToRoutine(
           routineActivityData
         );
-
+        console.log(routineActivityToCreateAndUpdate, "LOOK HERE!!");
         expect(routineActivityToCreateAndUpdate.routineId).toBe(
           routineActivityData.routineId
         );

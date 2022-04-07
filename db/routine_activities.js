@@ -6,7 +6,9 @@ async function addActivityToRoutine({
   count,
   duration,
 }) {
-  const { rows } = await client.query(
+  const {
+    rows: [routine],
+  } = await client.query(
     `
     INSERT INTO routine_activities("routineId", "activityId", count, duration)
     VALUES ($1, $2, $3, $4)
@@ -14,7 +16,19 @@ async function addActivityToRoutine({
     `,
     [routineId, activityId, count, duration]
   );
-  return rows;
+
+  return routine;
 }
 
-module.exports = { addActivityToRoutine };
+async function getRoutineActivitiesByRoutine({ id }) {
+  try {
+    const { rows } = await client.query(`
+    SELECT * FROM routine_activities
+    WHERE "routineId" = ${id}
+    `);
+    return rows;
+  } catch (error) {
+    throw error;
+  }
+}
+module.exports = { addActivityToRoutine, getRoutineActivitiesByRoutine };
