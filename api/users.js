@@ -5,6 +5,7 @@ const { createUser, getUserByUsername } = require("../db");
 
 usersRouter.post("/register", async (req, res, next) => {
   const { username, password } = req.body;
+  console.log(req.body, 'req.body')
   console.log("OMG YAY WE GOT HERE !!!!");
   try {
     const _user = await getUserByUsername(username);
@@ -15,19 +16,19 @@ usersRouter.post("/register", async (req, res, next) => {
       });
     }
     const user = await createUser({ username, password });
-    const token = jwt.sign(
-      {
-        id: user.id,
-        username: username,
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "1w",
-      }
-    );
+    // const token = jwt.sign(
+    //   {
+    //     id: user.id,
+    //     username: username,
+    //   },
+    //   process.env.JWT_SECRET,
+    //   {
+    //     expiresIn: "1w",
+    //   }
+    // );
     res.send({
       message: "thanks for registering :)",
-      token: token,
+      // token: token,
     });
   } catch ({ name, message }) {
     next({ name, message });
