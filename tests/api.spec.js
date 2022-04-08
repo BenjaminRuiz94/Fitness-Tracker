@@ -47,7 +47,7 @@ describe("API", () => {
   describe("Users", () => {
     let newUser = { username: "robert", password: "bobbylong321" };
     let newUserShortPassword = { username: "robertShort", password: "bobby21" };
-    console.log(API_URL, "LOOK HERE FOR API URL!!!");
+
     describe("POST /users/register", () => {
       let tooShortSuccess, tooShortResponse;
       beforeAll(async () => {
@@ -55,7 +55,7 @@ describe("API", () => {
           `${API_URL}/api/users/register`,
           newUser
         );
-        console.log(successResponse, "LOOK HERE FOR SUCCESSRESPONSE !!!");
+
         registeredUser = successResponse.data.user;
         try {
           tooShortSuccess = await axios.post(
@@ -118,6 +118,7 @@ describe("API", () => {
       });
       it("Returns a JSON Web Token. Stores the id and username in the token.", async () => {
         const parsedToken = jwt.verify(token, JWT_SECRET);
+        console.log(parsedToken, "PARSED TOKEN!!!");
         expect(parsedToken.id).toEqual(registeredUser.id);
         expect(parsedToken.username).toEqual(registeredUser.username);
       });
@@ -127,6 +128,7 @@ describe("API", () => {
         const { data } = await axios.get(`${API_URL}/api/users/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+
         expect(data.username).toBeTruthy();
         expect(data.username).toBe(registeredUser.username);
       });
@@ -141,13 +143,15 @@ describe("API", () => {
         expect(noTokenErrResp.data).toBeTruthy();
       });
     });
-    xdescribe("GET /users/:username/routines", () => {
+    describe("GET /users/:username/routines", () => {
       it("Gets a list of public routines for a particular user.", async () => {
         const userId = 2;
         const userWithRoutines = await getUserById(userId);
+
         const { data: routines } = await axios.get(
           `${API_URL}/api/users/${userWithRoutines.username}/routines`
         );
+
         const routinesFromDB = await getPublicRoutinesByUser(userWithRoutines);
         expect(routines).toBeTruthy();
         expect(routines).toEqual(routinesFromDB);

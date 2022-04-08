@@ -12,8 +12,8 @@ const { getUserById } = require("../db");
 const { JWT_SECRET } = process.env;
 
 apiRouter.use(async (req, res, next) => {
-  const prefix = 'Bearer ';
-  const auth = req.header('Authorization');
+  const prefix = "Bearer ";
+  const auth = req.header("Authorization");
 
   if (!auth) {
     // nothing to see here
@@ -32,16 +32,16 @@ apiRouter.use(async (req, res, next) => {
       next({ name, message });
     }
   } else {
-    throw({
-      name: 'AuthorizationHeaderError',
+    throw {
+      name: "AuthorizationHeaderError",
       message: `Authorization token must start with ${prefix}`,
-    });
+    };
   }
 });
 
 apiRouter.use((req, res, next) => {
   if (req.user) {
-    console.log('User is set:', req.user);
+    console.log("User is set:", req.user);
   }
 
   next();
