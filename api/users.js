@@ -1,8 +1,12 @@
 const express = require("express");
 const usersRouter = express.Router();
 const jwt = require("jsonwebtoken");
-const { createUser, getUserByUsername } = require("../db");
-const { requireUser } = require('./utils');
+const {
+  createUser,
+  getUserByUsername,
+  getPublicRoutinesByUser,
+} = require("../db");
+const { requireUser } = require("./utils");
 
 usersRouter.post("/register", async (req, res, next) => {
   const { username, password } = req.body;
@@ -10,18 +14,18 @@ usersRouter.post("/register", async (req, res, next) => {
   try {
     const _user = await getUserByUsername(username);
     if (_user) {
-      throw({
+      throw {
         name: "UserExistsError",
         message: "Username is taken, try again",
-      });
+      };
     }
-    if(password.length <8){
-      throw({
+    if (password.length < 8) {
+      throw {
         name: "PasswordTooShort",
         message: "Password is too short, try again",
-      });
+      };
     }
-    const user = await createUser({username, password});
+    const user = await createUser({ username, password });
     const token = jwt.sign(
       {
         id: user.id,
@@ -32,21 +36,21 @@ usersRouter.post("/register", async (req, res, next) => {
         expiresIn: "1w",
       }
     );
-    res.send({user, token});
+    res.send({ user, token });
   } catch ({ name, message }) {
-    console.log({name, message})
+    console.log({ name, message });
     next({ name, message });
   }
 });
 
-usersRouter.post('/login', async (req, res, next) => {
+usersRouter.post("/login", async (req, res, next) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    throw({
-      name: 'MissingCredentialsError',
-      message: 'Please supply both a username and password',
-    });
+    throw {
+      name: "MissingCredentialsError",
+      message: "Please supply both a username and password",
+    };
   }
 
   try {
@@ -59,10 +63,10 @@ usersRouter.post('/login', async (req, res, next) => {
       );
       res.send({ message: "you're logged in!", token: token });
     } else {
-     throw({
-        name: 'IncorrectCredentialsError',
-        message: 'Username or password is incorrect',
-      });
+      throw {
+        name: "IncorrectCredentialsError",
+        message: "Username or password is incorrect",
+      };
     }
   } catch (error) {
     console.log(error);
@@ -70,11 +74,33 @@ usersRouter.post('/login', async (req, res, next) => {
   }
 });
 
-usersRouter.get('/me', requireUser, async (req,res,next)=>{
-  const {username} = req.body
-  const user = await getUserByUsername(username)
+usersRouter.get("/me", requireUser, async (req, res, next) => {
+  try {
+    const { username } = req.user;
+    const user = await getUserByUsername(username);
 
-  res.send({user})
-})
+    res.send(user);
+  } catch (error) {
+    throw {
+      name: "User error",
+      message: `User requested must be ${username}`,
+    };
+  }
+});
+
+usersRouter.get("/:username/routines", async (req, res, next) => {
+  try {
+    console.log(req.params.username, "ksjdhflashfkla");
+    const user = req.params;
+    const username = await getPublicRoutinesByUser(user);
+    console.log(username.username, "LOOK EHRE FOR USER");
+    res.send(username);
+  } catch (error) {
+    throw {
+      name: "Routines request error",
+      message: `Routines requested do not match ${username}'s routines.`,
+    };
+  }
+});
 
 module.exports = usersRouter;
