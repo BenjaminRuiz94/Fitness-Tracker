@@ -69,7 +69,6 @@ activitiesRouter.get('/:activityId/routines', async (req,res,next)=>{
     const fields = {}
     fields.id = activityId
     try {
-        console.log(req.params,'TESTING')
         const pubRoutines = await getPublicRoutinesByActivity(fields)
         res.send(pubRoutines)
     } catch ({error}) {
