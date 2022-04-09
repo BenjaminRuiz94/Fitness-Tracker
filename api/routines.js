@@ -1,11 +1,12 @@
 const express = require("express");
-const id = require("faker/lib/locales/id_ID");
 const {
   getAllPublicRoutines,
   createRoutine,
   updateRoutine,
   getRoutineById,
   destroyRoutine,
+  addActivityToRoutine,
+  getRoutineActivitiesByRoutine,
 } = require("../db");
 const { requireUser } = require("./utils");
 const routinesRouter = express.Router();
@@ -22,7 +23,6 @@ routinesRouter.get("/", async (req, res, next) => {
 routinesRouter.post("/", requireUser, async (req, res, next) => {
   try {
     const { isPublic, name, goal } = req.body;
-    console.log(req.user, "TAKE A LOOK");
     const newRoutine = {};
     newRoutine.creatorId = req.user.id;
     newRoutine.isPublic = isPublic;
@@ -74,18 +74,40 @@ routinesRouter.patch("/:routineId", requireUser, async (req, res, next) => {
 routinesRouter.delete("/:routineId", requireUser, async (req, res, next) => {
   try {
     const id = req.user.id;
-    console.log(req.user.id, "Current user Id");
     const routineId = req.params.routineId;
     const routine = await getRoutineById(routineId);
-    console.log(routine, "Routine");
     if (id === routine.creatorId) {
       let newRoutine = await destroyRoutine(routineId);
-      console.log(newRoutine, "New routine");
-      res.send(newRoutine);
+      res.send(routine);
     }
   } catch (error) {
     throw error;
   }
 });
+
+routinesRouter.post("/:routineId/activities", async (req,res,next)=>{
+    try {
+        const {activityId, duration, count} = req.body
+        const fields = {}
+        const routine = await getRoutineById(req.params.routineId)
+        const routineActivities = await getRoutineActivitiesByRoutine(routine)
+        if(routine && routineActivities.length === 0){
+            fields.routineId = routine.id
+            fields.activityId = activityId
+            fields.duration = duration
+            fields.count = count
+            const attached = await addActivityToRoutine(fields)
+            res.send(attached)
+        } else{
+            next ({
+                name: "RoutineId Error",
+                message: "That routine doesn't exist!"
+            })
+    }
+    } catch (error) {
+        throw error;
+    }
+
+})
 
 module.exports = routinesRouter;
