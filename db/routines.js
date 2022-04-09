@@ -174,6 +174,7 @@ async function destroyRoutine(id) {
     DELETE FROM routines
     WHERE id = ${id} 
     `);
+
     await client.query(`
     DELETE FROM routine_activities
     WHERE "routineId" = ${id}
