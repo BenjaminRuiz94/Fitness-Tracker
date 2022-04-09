@@ -123,7 +123,7 @@ describe("API", () => {
         expect(parsedToken.username).toEqual(registeredUser.username);
       });
     });
-    xdescribe("GET /users/me", () => {
+    describe("GET /users/me", () => {
       it("sends back users data if valid token is supplied in header", async () => {
         const { data } = await axios.get(`${API_URL}/api/users/me`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -224,7 +224,7 @@ describe("API", () => {
       });
     });
   });
-  xdescribe("Routines", () => {
+  describe("Routines", () => {
     let routineToCreateAndUpdate = {
       isPublic: true,
       name: "Elliptical Day",
@@ -240,7 +240,7 @@ describe("API", () => {
       name: "Elliptical Day Private",
       goal: "Work on that Elliptical, yet again!",
     };
-    xdescribe("GET /routines", () => {
+    describe("GET /routines", () => {
       it("Returns a list of public routines, includes the activities with them", async () => {
         const publicRoutinesFromDB = await getAllPublicRoutines();
         const { data: publicRoutinesFromAPI } = await axios.get(
