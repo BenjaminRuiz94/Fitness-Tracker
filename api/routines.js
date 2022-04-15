@@ -43,30 +43,30 @@ routinesRouter.post("/", requireUser, async (req, res, next) => {
 });
 
 routinesRouter.patch("/:routineId", requireUser, async (req, res, next) => {
-  const { routineId } = req.params;
-  const Routine = await getRoutineById(routineId);
-  if (req.user.id === Routine.creatorId) {
-    const { isPublic, name, goal } = req.body;
-    const updateFields = {};
-    if (routineId) {
-      updateFields.id = routineId;
-    }
-    if (isPublic) {
-      updateFields.isPublic = isPublic;
-    }
-    if (name) {
-      updateFields.name = name;
-    }
-    if (goal) {
-      updateFields.goal = goal;
-    }
-    try {
+  try {
+    const { routineId } = req.params;
+    const Routine = await getRoutineById(routineId);
+    if (req.user.id === Routine.creatorId) {
+      const { isPublic, name, goal } = req.body;
+      const updateFields = {};
+      if (routineId) {
+        updateFields.id = routineId;
+      }
+      if (isPublic) {
+        updateFields.isPublic = isPublic;
+      }
+      if (name) {
+        updateFields.name = name;
+      }
+      if (goal) {
+        updateFields.goal = goal;
+      }
       const updatedRoutine = await updateRoutine(updateFields);
       res.send(updatedRoutine);
-    } catch (error) {
+    } else {
       throw error;
     }
-  } else {
+  } catch (error) {
     throw error;
   }
 });
@@ -85,29 +85,29 @@ routinesRouter.delete("/:routineId", requireUser, async (req, res, next) => {
   }
 });
 
-routinesRouter.post("/:routineId/activities", async (req,res,next)=>{
-    try {
-        const {activityId, duration, count} = req.body
-        const fields = {}
-        const routine = await getRoutineById(req.params.routineId)
-        const routineActivities = await getRoutineActivitiesByRoutine(routine)
-        if(routine && routineActivities.length === 0){
-            fields.routineId = routine.id
-            fields.activityId = activityId
-            fields.duration = duration
-            fields.count = count
-            const attached = await addActivityToRoutine(fields)
-            res.send(attached)
-        } else{
-            next ({
-                name: "RoutineId Error",
-                message: "That routine doesn't exist!"
-            })
+routinesRouter.post("/:routineId/activities", async (req, res, next) => {
+  try {
+    const { activityId, duration, count } = req.body;
+    const fields = {};
+    const routine = await getRoutineById(req.params.routineId);
+    const routineActivities = await getRoutineActivitiesByRoutine(routine);
+    if (routine && routineActivities.length === 0) {
+      fields.routineId = routine.id;
+      fields.activityId = activityId;
+      fields.duration = duration;
+      fields.count = count;
+      const attached = await addActivityToRoutine(fields);
+      res.send(attached);
+    } else {
+      res.status(404);
+      next({
+        name: "RoutineId Error",
+        message: "That routine doesn't exist!",
+      });
     }
-    } catch (error) {
-        throw error;
-    }
-
-})
+  } catch (error) {
+    throw error;
+  }
+});
 
 module.exports = routinesRouter;

@@ -10,7 +10,6 @@ const { requireUser } = require("./utils");
 
 usersRouter.post("/register", async (req, res, next) => {
   const { username, password } = req.body;
-  console.log("OMG YAY WE GOT HERE !!!!");
   try {
     const _user = await getUserByUsername(username);
     if (_user) {
@@ -38,7 +37,6 @@ usersRouter.post("/register", async (req, res, next) => {
     );
     res.send({ user, token });
   } catch ({ name, message }) {
-    console.log({ name, message });
     next({ name, message });
   }
 });
@@ -69,7 +67,6 @@ usersRouter.post("/login", async (req, res, next) => {
       };
     }
   } catch (error) {
-    console.log(error);
     next(error);
   }
 });
@@ -90,10 +87,8 @@ usersRouter.get("/me", requireUser, async (req, res, next) => {
 
 usersRouter.get("/:username/routines", async (req, res, next) => {
   try {
-    console.log(req.params.username, "ksjdhflashfkla");
     const user = req.params;
     const username = await getPublicRoutinesByUser(user);
-    console.log(username.username, "LOOK EHRE FOR USER");
     res.send(username);
   } catch (error) {
     throw {

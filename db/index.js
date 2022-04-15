@@ -29,6 +29,7 @@ const {
   getRoutineActivitiesByRoutine,
   updateRoutineActivity,
   destroyRoutineActivity,
+  getRoutineActivityById,
 } = require("./routine_activities");
 
 module.exports = {
@@ -55,4 +56,5 @@ module.exports = {
   getRoutineActivitiesByRoutine,
   updateRoutineActivity,
   getUserByUsername,
+  getRoutineActivityById,
 };

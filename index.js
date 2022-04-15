@@ -6,6 +6,7 @@ const server = express();
 const apiRouter = require("./api");
 const morgan = require("morgan");
 const client = require("./db/client");
+client.connect();
 
 server.use(morgan("dev"));
 server.use(express.json());
@@ -23,8 +24,6 @@ server.use("/api", apiRouter);
 server.get("/api", function (req, res, next) {
   res.json({ msg: "This is CORS-enabled for all origins!" });
 });
-
-client.connect();
 
 server.listen(PORT, () => {
   console.log("Server is live on port:", PORT);

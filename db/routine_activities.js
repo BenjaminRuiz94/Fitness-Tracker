@@ -75,8 +75,24 @@ async function destroyRoutineActivity(id) {
     `,
       [id]
     );
-    console.log("we finished deleting");
     return deletedRoutine;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getRoutineActivityById(id) {
+  try {
+    const {
+      rows: [routineActivity],
+    } = await client.query(
+      `
+    SELECT * FROM routine_activities
+    WHERE id = $1
+    `,
+      [id]
+    );
+    return routineActivity;
   } catch (error) {
     throw error;
   }
@@ -87,4 +103,5 @@ module.exports = {
   getRoutineActivitiesByRoutine,
   updateRoutineActivity,
   destroyRoutineActivity,
+  getRoutineActivityById,
 };

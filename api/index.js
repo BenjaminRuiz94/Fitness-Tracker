@@ -6,8 +6,9 @@ const express = require("express");
 const apiRouter = express.Router();
 const healthRouter = require("./health");
 const usersRouter = require("./users");
-const activitiesRouter = require("./activities")
-const routinesRouter = require("./routines")
+const activitiesRouter = require("./activities");
+const routineActivitiesRouter = require("./routine_activities");
+const routinesRouter = require("./routines");
 const jwt = require("jsonwebtoken");
 const { getUserById } = require("../db");
 const { JWT_SECRET } = process.env;
@@ -51,4 +52,5 @@ apiRouter.use("/health", healthRouter);
 apiRouter.use("/users", usersRouter);
 apiRouter.use("/activities", activitiesRouter);
 apiRouter.use("/routines", routinesRouter);
+apiRouter.use("/routine_activities", routineActivitiesRouter);
 module.exports = apiRouter;
